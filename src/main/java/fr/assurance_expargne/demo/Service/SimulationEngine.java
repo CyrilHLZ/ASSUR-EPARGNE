@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Service;
+
 import fr.assurance_expargne.demo.DTO.YearResult;
 import fr.assurance_expargne.demo.Model.BonusMode;
 
+@Service 
 public class SimulationEngine {
     
 
@@ -33,7 +36,7 @@ public class SimulationEngine {
                                           increment, plafond, anneesSansSinistre);
             double bonus = cotisation * taux;
             capital = capital * (1 + rendement) + bonus;
-            resultats.add(new YearResult(annee, capital));
+            resultats.add(new YearResult(annee, capital, bonus));
         }
         return resultats;
     }
