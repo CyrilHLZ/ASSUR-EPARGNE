@@ -1,5 +1,11 @@
 package fr.assurance_expargne.demo.DTO;
 
-public record ClientSimulationResponse() {
-    
-}
+import java.util.List;
+
+public record ClientSimulationResponse(
+        double capitalFinal,
+        double bonusTotal,            
+        List<YearResult> detailParAnnee   
+) {}
+
+
