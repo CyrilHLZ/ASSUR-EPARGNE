@@ -44,8 +44,9 @@ export default function ProfilForm() {
   }
 
   return (
-    <>
-      <form onSubmit={simuler}>
+    <div className="disposition">
+      <form className="carte formulaire" onSubmit={simuler}>
+        <h2>Votre profil</h2>
         <label>
           Cotisation auto (€/an)
           <input
@@ -71,7 +72,9 @@ export default function ProfilForm() {
           />
         </label>
         <label>
-          Durée (en années)
+          <span>
+            Durée : <span className="valeur-curseur">{duree} ans</span>
+          </span>
           <input
             type="range"
             min="1"
@@ -79,7 +82,6 @@ export default function ProfilForm() {
             value={duree}
             onChange={(e) => setDuree(Number(e.target.value))}
           />
-          {duree} ans
         </label>
 
         <GrilleSinistres
@@ -88,16 +90,22 @@ export default function ProfilForm() {
           onBasculer={basculerSinistre}
         />
 
-        <button type="submit">Simuler</button>
+        <button className="bouton" type="submit">Simuler</button>
       </form>
 
-      {resultat && (
-        <>
-          <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
-          <Graphique lignes={resultat.detailParAnnee} />
-          <TableauAnnees lignes={resultat.detailParAnnee} />
-        </>
-      )}
-    </>
+      <section className="resultats">
+        {resultat ? (
+          <>
+            <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
+            <Graphique lignes={resultat.detailParAnnee} />
+            <TableauAnnees lignes={resultat.detailParAnnee} />
+          </>
+        ) : (
+          <div className="carte vide">
+            Renseignez vos cotisations puis cliquez sur « Simuler ».
+          </div>
+        )}
+      </section>
+    </div>
   );
 }

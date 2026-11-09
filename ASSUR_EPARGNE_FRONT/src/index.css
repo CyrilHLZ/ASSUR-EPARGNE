@@ -1,0 +1,316 @@
+/* ---------- Couleurs et variables ---------- */
+:root {
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --text: #1c2b27;
+  --muted: #5d6e69;
+  --border: #dde4e1;
+  --accent: #0f7a66;
+  --accent-hover: #0b5f50;
+  --accent-soft: #e3f2ee;
+  --bonus: #c27803;
+  --danger: #c2410c;
+  --danger-soft: #fdece4;
+  --shadow: 0 1px 2px rgba(16, 40, 34, 0.06), 0 4px 16px rgba(16, 40, 34, 0.06);
+  --radius: 12px;
+
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  color-scheme: light dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111816;
+    --surface: #1a2320;
+    --text: #e6eeeb;
+    --muted: #9aaba6;
+    --border: #2b3833;
+    --accent: #3cc4a8;
+    --accent-hover: #5fd6bd;
+    --accent-soft: #173a33;
+    --bonus: #f0b04a;
+    --danger: #fb8a5c;
+    --danger-soft: #3a2219;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+/* ---------- Mise en page ---------- */
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+
+.entete {
+  margin-bottom: 24px;
+}
+
+.entete h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.entete p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.disposition {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .disposition {
+    grid-template-columns: 1fr;
+  }
+}
+
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.carte h2 {
+  margin: 0 0 16px;
+  font-size: 1.05rem;
+}
+
+/* ---------- Formulaire ---------- */
+.formulaire {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formulaire label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.formulaire input[type='number'] {
+  font: inherit;
+  font-weight: 400;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.formulaire input[type='number']:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.formulaire input[type='range'] {
+  accent-color: var(--accent);
+  width: 100%;
+}
+
+.valeur-curseur {
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.bouton {
+  font: inherit;
+  font-weight: 600;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bouton:hover {
+  background: var(--accent-hover);
+}
+
+@media (prefers-color-scheme: dark) {
+  .bouton {
+    color: #0d1f1b;
+  }
+}
+
+/* ---------- Grille des sinistres ---------- */
+.grille-titre {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.grille-aide {
+  margin: 2px 0 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 6px;
+}
+
+.annee {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 6px 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.annee:hover {
+  border-color: var(--accent);
+}
+
+.annee--sinistre {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* ---------- Résultats ---------- */
+.resultats {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.vide {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.tuiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.tuile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tuile span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.tuile strong {
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tuile--capital strong {
+  color: var(--accent);
+}
+
+.tuile--bonus strong {
+  color: var(--bonus);
+}
+
+/* ---------- Graphique (Recharts) ---------- */
+.recharts-cartesian-grid line {
+  stroke: var(--border);
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: var(--border);
+}
+
+.ligne-capital .recharts-line-curve {
+  stroke: var(--accent);
+}
+
+.ligne-bonus .recharts-line-curve {
+  stroke: var(--bonus);
+}
+
+.recharts-default-tooltip {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px;
+}
+
+/* ---------- Tableau ---------- */
+.tableau-conteneur {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.tableau th,
+.tableau td {
+  padding: 8px 12px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+.tableau th:first-child,
+.tableau td:first-child {
+  text-align: left;
+}
+
+.tableau th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tableau tbody tr:hover {
+  background: var(--accent-soft);
+}

@@ -48,7 +48,7 @@ L'année 1, le capital vaut 100 €. L'année 2, il vaut 100 × 1,02 + 100 = 202
 
 ```
 ASSUR-EPARGNE/
-├── ASSUR'EPARGNE_BACK/              API Spring Boot (port 8090)
+├── ASSUR_EPARGNE_BACK/              API Spring Boot (port 8090)
 │   └── src/main/java/fr/assurance_expargne/demo/
 │       ├── Controller/   SimulationController    → POST /api/simulations/client
 │       ├── Service/      ClientSimulationService → additionne les cotisations, regroupe les sinistres
@@ -58,7 +58,7 @@ ASSUR-EPARGNE/
 │       ├── Model/        BonusMode (AUCUN, FIXE, VARIABLE)
 │       └── Exception/    GlobalExceptionHandler  → erreurs 400 lisibles
 │
-└── ASSUR'EPARGNE_FRONT/             Interface React (port 5173)
+└── ASSUR_EPARGNE_FRONT/             Interface React (port 5173)
     └── src/Service/
         ├── ProfilForm.jsx       formulaire, état et appel de l'API
         ├── GrilleSinistres.jsx  une case par année, clic = sinistre
@@ -76,7 +76,7 @@ En développement, le **proxy Vite** redirige les appels `/api` du front vers `h
 **1. Le back**
 
 ```bash
-cd "ASSUR'EPARGNE_BACK"
+cd ASSUR_EPARGNE_BACK
 ./mvnw spring-boot:run          # Windows : mvnw.cmd spring-boot:run
 ```
 
@@ -85,7 +85,7 @@ L'API démarre sur `http://localhost:8090`.
 **2. Le front** (dans un second terminal)
 
 ```bash
-cd "ASSUR'EPARGNE_FRONT"
+cd ASSUR_EPARGNE_FRONT
 npm install
 npm run dev
 ```
@@ -95,7 +95,7 @@ Ouvre ensuite `http://localhost:5173`.
 **3. Les tests**
 
 ```bash
-cd "ASSUR'EPARGNE_BACK"
+cd ASSUR_EPARGNE_BACK
 ./mvnw test
 ```
 
