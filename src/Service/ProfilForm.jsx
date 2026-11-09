@@ -4,6 +4,7 @@ export default function ProfilForm() {
   const [cotisationAuto, setCotisationAuto] = useState(0);
   const [cotisationHabitation, setCotisationHabitation] = useState(0);
   const [cotisationSante, setCotisationSante] = useState(0);
+  const [duree, setDuree] = useState(20);
 
   return (
     <form>
@@ -29,6 +30,16 @@ export default function ProfilForm() {
             type="number"
                 value={cotisationSante}
                 onChange={(e) => setCotisationSante(Number(e.target.value))}
+            />
+        </label>
+        <label>
+            Durée (en années)
+            <input
+            type="range"
+                min="1"
+                max="40"
+                value={duree}
+                onChange={(e) => setDuree(Number(e.target.value))}
             />
         </label>
     </form>
