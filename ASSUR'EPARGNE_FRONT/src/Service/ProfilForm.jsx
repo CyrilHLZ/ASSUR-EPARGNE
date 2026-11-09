@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Tuiles from './Tuiles';
 import TableauAnnees from './TableauAnnees';
 import Graphique from './Graphique';
+import GrilleSinistres from './GrilleSinistres';
 
 export default function ProfilForm() {
   const [cotisationAuto, setCotisationAuto] = useState(0);
@@ -9,6 +10,7 @@ export default function ProfilForm() {
   const [cotisationSante, setCotisationSante] = useState(0);
   const [duree, setDuree] = useState(20);
   const [resultat, setResultat] = useState(null);
+  const [sinistresAuto, setSinistresAuto] = useState([]);
 
   async function simuler(e) {
     e.preventDefault();
@@ -22,7 +24,7 @@ export default function ProfilForm() {
         cotisationSante,
         duree,
         versementMensuel: 0,
-        sinistresAuto: [], sinistresSante: [], sinistresHabitation: [],
+        sinistresAuto, sinistresSante: [], sinistresHabitation: [],
         rendement: 0.02,
         tauxFixe: 0.10, tauxDepart: 0, increment: 0, plafond: 0,
         mode: 'FIXE',
@@ -31,6 +33,14 @@ export default function ProfilForm() {
 
     const donnees = await reponse.json();
     setResultat(donnees);
+  }
+
+  function basculerSinistre(annee) {
+    if (sinistresAuto.includes(annee)) {
+      setSinistresAuto(sinistresAuto.filter((a) => a !== annee));
+    } else {
+      setSinistresAuto([...sinistresAuto, annee]);
+    }
   }
 
   return (
@@ -71,16 +81,23 @@ export default function ProfilForm() {
           />
           {duree} ans
         </label>
+
+        <GrilleSinistres
+          duree={duree}
+          sinistres={sinistresAuto}
+          onBasculer={basculerSinistre}
+        />
+
         <button type="submit">Simuler</button>
       </form>
 
-      {resultat &&
-        <> 
-        <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
-        <TableauAnnees lignes={resultat.detailParAnnee}/>
-        <Graphique lignes={resultat.detailParAnnee} />
+      {resultat && (
+        <>
+          <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
+          <Graphique lignes={resultat.detailParAnnee} />
+          <TableauAnnees lignes={resultat.detailParAnnee} />
         </>
-        }
+      )}
     </>
   );
 }
