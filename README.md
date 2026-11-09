@@ -11,13 +11,15 @@ Projet full-stack : une **API REST en Java / Spring Boot** et une **interface en
 
 ## Fonctionnalités
 
-- Saisie des cotisations annuelles **auto, habitation et santé**.
-- Choix de la **durée** de simulation (1 à 40 ans) avec un curseur.
-- **Grille des sinistres** : un clic sur une année déclare un sinistre, un second clic le retire.
+- Saisie des cotisations annuelles **auto et habitation**.
+- Choix du **type de bonus** : progressif (taux de départ, hausse par année sans sinistre, plafond) ou fixe.
+- Réglage du **rendement** et de la **durée** (5 à 30 ans) avec des curseurs, calcul en direct.
+- **Grille des sinistres** auto et habitation : un clic sur une année déclare un sinistre, un second clic le retire.
 - Résultats :
-  - tuiles **capital final** et **total des bonus** ;
+  - tuiles **capital au terme**, **bonus versés**, **intérêts** et **cotisations payées** ;
+  - comparaison **avec ou sans Assur'Épargne** ;
   - **graphique** de l'évolution de l'épargne (Recharts) ;
-  - **tableau** détaillé année par année.
+  - **tableau** détaillé année par année, avec le taux du bonus.
 - **Validation** des saisies côté API : une cotisation négative renvoie une erreur `400` avec un message par champ.
 
 ## Règle métier
@@ -108,13 +110,11 @@ cd ASSUR_EPARGNE_BACK
 
 ```json
 {
-  "cotisationAuto": 600,
+  "cotisationAuto": 700,
   "cotisationHabitation": 300,
-  "cotisationSante": 100,
   "versementMensuel": 0,
   "sinistresAuto": [3],
   "sinistresHabitation": [],
-  "sinistresSante": [],
   "rendement": 0.02,
   "duree": 3,
   "mode": "FIXE",
@@ -148,7 +148,7 @@ Si une cotisation est négative, l'API répond `400 Bad Request` :
 ## Pistes d'amélioration
 
 - Choisir le mode de bonus, le rendement et les taux depuis l'interface.
-- Gérer les sinistres habitation et santé dans la grille.
+- Un compteur de sinistres par contrat (aujourd'hui, un sinistre habitation supprime aussi le bonus auto).
 - Mise en ligne (back et front déployés).
 
 ## Auteur
