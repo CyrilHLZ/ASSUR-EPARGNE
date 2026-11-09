@@ -13,11 +13,9 @@ public record ClientSimulationRequest(
     @DecimalMin (value = "0.0", message = "Le capital initial doit être supérieur à 0")
     double cotisationAuto,
 
-    @DecimalMin (value = "0.0", message = "Le capital initial doit être supérieur à 0")
-    double cotisationSante,
+    @DecimalMin (value = "0.0", message = "Le versement mensuel ne peut pas être négatif")
     double versementMensuel,
     Set<Integer> sinistresAuto,
-    Set<Integer> sinistresSante,
     Set<Integer> sinistresHabitation, 
     double rendement, 
     int duree,

@@ -15,13 +15,14 @@ public class SimulationEngine {
 
     private final BonusCalculator calculator = new BonusCalculator();
 
-    public List<YearResult> simuler(double cotisation, double rendement, int duree,
+    public List<YearResult> simuler(double cotisation, double versementMensuel, double rendement, int duree,
                                     BonusMode mode, double tauxFixe, double tauxDepart,
                                     double increment, double plafond,
                                     Set<Integer> sinistres) {
         List<YearResult> resultats = new ArrayList<>();
         double capital = 0;
         int anneesSansSinistre = 0;
+        double versementAnnuel = versementMensuel * 12;
 
         for (int annee = 1; annee <= duree; annee++) {
 
@@ -35,7 +36,7 @@ public class SimulationEngine {
             double taux = calculator.taux(mode, tauxFixe, tauxDepart,
                                           increment, plafond, anneesSansSinistre);
             double bonus = cotisation * taux;
-            capital = capital * (1 + rendement) + bonus;
+            capital = capital * (1 + rendement) + bonus + versementAnnuel;
             resultats.add(new YearResult(annee, capital, bonus));
         }
         return resultats;

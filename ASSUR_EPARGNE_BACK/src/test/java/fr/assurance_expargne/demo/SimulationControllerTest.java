@@ -23,9 +23,9 @@ class SimulationControllerTest {
     void simulationDossierRenvoie200() throws Exception {
         String json = """
             {
-              "cotisationHabitation": 400, "cotisationAuto": 461, "cotisationSante": 200,
+              "cotisationHabitation": 400, "cotisationAuto": 661,
               "versementMensuel": 0,
-              "sinistresAuto": [], "sinistresSante": [], "sinistresHabitation": [],
+              "sinistresAuto": [], "sinistresHabitation": [],
               "rendement": 0.02, "duree": 20,
               "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
               "mode": "FIXE"

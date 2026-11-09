@@ -20,17 +20,16 @@ public class ClientSimulationService {
     }
 
     public ClientSimulationResponse simuler(ClientSimulationRequest req) {
-        // 1. Additionner les 3 cotisations
-        double cotisation = req.cotisationHabitation() + req.cotisationAuto() + req.cotisationSante();
+        // 1. Additionner les 2 cotisations
+        double cotisation = req.cotisationHabitation() + req.cotisationAuto();
 
-        // 2. Regrouper les 3 ensembles de sinistres en un seul
+        // 2. Regrouper les 2 ensembles de sinistres en un seul
         Set<Integer> sinistres = new HashSet<>();
         sinistres.addAll(req.sinistresAuto());
         sinistres.addAll(req.sinistresHabitation());
-        sinistres.addAll(req.sinistresSante());
 
         // 3. Appeler le moteur
-        List<YearResult> detail = engine.simuler(cotisation, req.rendement(), req.duree(),
+        List<YearResult> detail = engine.simuler(cotisation, req.versementMensuel(), req.rendement(), req.duree(),
                 req.mode(), req.tauxFixe(), req.tauxDepart(),
                 req.increment(), req.plafond(), sinistres);
 
