@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Tuiles from './Tuiles';
 import TableauAnnees from './TableauAnnees';
+import Graphique from './Graphique';
 
 export default function ProfilForm() {
   const [cotisationAuto, setCotisationAuto] = useState(0);
@@ -77,6 +78,7 @@ export default function ProfilForm() {
         <> 
         <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
         <TableauAnnees lignes={resultat.detailParAnnee}/>
+        <Graphique lignes={resultat.detailParAnnee} />
         </>
         }
     </>
