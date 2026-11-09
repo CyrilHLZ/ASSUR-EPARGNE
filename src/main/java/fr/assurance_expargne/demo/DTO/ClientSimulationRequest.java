@@ -3,11 +3,17 @@ package fr.assurance_expargne.demo.DTO;
 import java.util.Set;
 
 import fr.assurance_expargne.demo.Model.BonusMode;
+import jakarta.validation.constraints.DecimalMin;
 
 public record ClientSimulationRequest(
 
+    @DecimalMin (value = "0.0", message = "Le capital initial doit être supérieur à 0")
     double cotisationHabitation,
+
+    @DecimalMin (value = "0.0", message = "Le capital initial doit être supérieur à 0")
     double cotisationAuto,
+
+    @DecimalMin (value = "0.0", message = "Le capital initial doit être supérieur à 0")
     double cotisationSante,
     double versementMensuel,
     Set<Integer> sinistresAuto,

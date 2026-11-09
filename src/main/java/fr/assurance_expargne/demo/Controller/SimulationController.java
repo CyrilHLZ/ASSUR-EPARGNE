@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.assurance_expargne.demo.DTO.ClientSimulationRequest;
 import fr.assurance_expargne.demo.DTO.ClientSimulationResponse;
 import fr.assurance_expargne.demo.Service.ClientSimulationService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/simulations")
@@ -20,7 +21,7 @@ public class SimulationController {
     }
 
     @PostMapping("/client")
-    public ClientSimulationResponse simulerClient(@RequestBody ClientSimulationRequest req) {
+    public ClientSimulationResponse simulerClient(@Valid @RequestBody ClientSimulationRequest req) {
         return simulationService.simuler(req);
     }
 }
