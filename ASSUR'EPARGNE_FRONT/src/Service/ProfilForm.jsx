@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Tuiles from './Tuiles';
+import TableauAnnees from './TableauAnnees';
 
 export default function ProfilForm() {
   const [cotisationAuto, setCotisationAuto] = useState(0);
@@ -71,7 +73,12 @@ export default function ProfilForm() {
         <button type="submit">Simuler</button>
       </form>
 
-      {resultat && <p>Capital final : {resultat.capitalFinal} €</p>}
+      {resultat &&
+        <> 
+        <Tuiles capitalFinal={resultat.capitalFinal} bonusTotal={resultat.bonusTotal} />
+        <TableauAnnees lignes={resultat.detailParAnnee}/>
+        </>
+        }
     </>
   );
 }
