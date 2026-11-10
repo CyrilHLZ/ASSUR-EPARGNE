@@ -15,7 +15,7 @@ public class SimulationEngine {
     private final BonusCalculator calculator = new BonusCalculator();
 
     public List<YearResult> simuler(Contrat auto, Contrat habitation,
-                                    double versementMensuel, double rendement, int duree,
+                                    double versementMensuel, double hausseAnnuelle, double rendement, int duree,
                                     BonusMode mode, double tauxFixe, double tauxDepart,
                                     double increment, double plafond) {
         List<YearResult> resultats = new ArrayList<>();
@@ -27,8 +27,14 @@ public class SimulationEngine {
         // Cumuls depuis l'année 1
         double bonusCumul = 0;
         double versementsCumul = 0;
+        double cotisationsCumul = 0;
 
         for (int annee = 1; annee <= duree; annee++) {
+
+            // La cotisation de l'année : +hausse chaque année, l'année 1 reste à la valeur saisie
+            double facteur = Math.pow(1 + hausseAnnuelle, annee - 1);
+            double cotisationAuto = auto.cotisation() * facteur;
+            double cotisationHabitation = habitation.cotisation() * facteur;
 
             // Un compteur par contrat : sinistre → 0, sinon +1
             if (auto.sinistres().contains(annee)) {
@@ -47,21 +53,24 @@ public class SimulationEngine {
             double tauxHabitation = calculator.taux(mode, tauxFixe, tauxDepart,
                                                     increment, plafond, sansSinistreHabitation);
 
-            double bonusAuto = auto.cotisation() * tauxAuto;
-            double bonusHabitation = habitation.cotisation() * tauxHabitation;
+            // Le bonus se calcule sur la cotisation DE L'ANNÉE
+            double bonusAuto = cotisationAuto * tauxAuto;
+            double bonusHabitation = cotisationHabitation * tauxHabitation;
             double bonus = bonusAuto + bonusHabitation;
 
             capital = capital * (1 + rendement) + bonus + versementAnnuel;
 
             bonusCumul += bonus;
             versementsCumul += versementAnnuel;
+            cotisationsCumul += cotisationAuto + cotisationHabitation;
             // Ce qui n'est ni du bonus ni un versement vient des intérêts
             double interets = capital - bonusCumul - versementsCumul;
 
             resultats.add(new YearResult(annee, capital,
                     bonus, bonusAuto, bonusHabitation,
                     tauxAuto, tauxHabitation,
-                    bonusCumul, versementsCumul, interets));
+                    bonusCumul, versementsCumul, interets,
+                    cotisationAuto, cotisationHabitation, cotisationsCumul));
         }
         return resultats;
     }

@@ -25,7 +25,7 @@ class SimulationControllerTest {
         String json = """
             {
               "cotisationHabitation": 400, "cotisationAuto": 661,
-              "versementMensuel": 0,
+              "versementMensuel": 0, "hausseAnnuelle": 0,
               "sinistresAuto": [], "sinistresHabitation": [],
               "rendement": 0.02, "duree": 20,
               "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
@@ -46,7 +46,7 @@ class SimulationControllerTest {
         String json = """
             {
             "cotisationHabitation": 400, "cotisationAuto": 661,
-            "versementMensuel": 0,
+            "versementMensuel": 0, "hausseAnnuelle": 0,
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 0,
             "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
@@ -67,7 +67,7 @@ class SimulationControllerTest {
         String json = """
             {
             "cotisationHabitation": 400, "cotisationAuto": 661,
-            "versementMensuel": 0,
+            "versementMensuel": 0, "hausseAnnuelle": 0,
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0
             }
@@ -88,7 +88,7 @@ class SimulationControllerTest {
         String json = """
             {
             "cotisationHabitation": 400, "cotisationAuto": 661,
-            "versementMensuel": 0,
+            "versementMensuel": 0, "hausseAnnuelle": 0,
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0, "tauxDepart": 0.05, "increment": 0.005, "plafond": 0.03,
@@ -108,7 +108,7 @@ class SimulationControllerTest {
         String json = """
             {
             "cotisationHabitation": 400, "cotisationAuto": 661,
-            "versementMensuel": 0,
+            "versementMensuel": 0, "hausseAnnuelle": 0,
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0, "tauxDepart": 0.05, "increment": -0.005, "plafond": 0.10,
@@ -128,7 +128,7 @@ class SimulationControllerTest {
         String json = """
             {
             "cotisationHabitation": 0, "cotisationAuto": 1000,
-            "versementMensuel": 100,
+            "versementMensuel": 100, "hausseAnnuelle": 0,
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 2,
             "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
@@ -144,5 +144,26 @@ class SimulationControllerTest {
                 .andExpect(jsonPath("$.versementsTotal").value(closeTo(2400.0, 0.01)))
                 .andExpect(jsonPath("$.interetsTotal").value(closeTo(26.0, 0.01)))
                 .andExpect(jsonPath("$.detailParAnnee[1].interets").value(closeTo(26.0, 0.01)));
+    }
+
+    @Test
+    void hausseTropForteRenvoie400() throws Exception {
+        String json = """
+            {
+            "cotisationHabitation": 400, "cotisationAuto": 661,
+            "versementMensuel": 0,
+            "sinistresAuto": [], "sinistresHabitation": [],
+            "rendement": 0.02, "duree": 20,
+            "tauxFixe": 0, "tauxDepart": 0.05, "increment": 0.005, "plafond": 0.10,
+            "hausseAnnuelle": 0.20,
+            "mode": "VARIABLE"
+            }
+            """;
+
+        mockMvc.perform(post("/api/simulations/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.hausseAnnuelle").exists());
     }
 }

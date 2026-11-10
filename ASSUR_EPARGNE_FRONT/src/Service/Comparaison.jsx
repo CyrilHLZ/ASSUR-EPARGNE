@@ -1,8 +1,8 @@
 const euros = (v) => Math.round(v).toLocaleString('fr-FR') + ' €';
 
-export default function Comparaison({ lignes, cotisation, duree }) {
+export default function Comparaison({ lignes, duree }) {
   const derniere = lignes[lignes.length - 1];
-  const paye = cotisation * duree;
+  const paye = derniere.cotisationsCumul;
   const recupere = derniere.bonusCumul;
   const part = Math.min(100, (recupere / paye) * 100);
 

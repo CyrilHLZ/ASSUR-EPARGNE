@@ -17,7 +17,7 @@ Projet full-stack : une **API REST en Java / Spring Boot** et une **interface en
 
 - Saisie des cotisations annuelles **auto et habitation**.
 - Choix du **type de bonus** : progressif (taux de départ, hausse par année sans sinistre, plafond) ou fixe.
-- Réglage du **rendement** et de la **durée** (5 à 30 ans) avec des curseurs, calcul en direct.
+- Réglage du **rendement**, des **versements libres**, de la **hausse annuelle des cotisations** et de la **durée** (5 à 30 ans) avec des curseurs, calcul en direct.
 - **Grille des sinistres** auto et habitation : un clic sur une année déclare un sinistre, un second clic le retire.
 - Résultats :
   - tuiles **capital au terme**, **bonus versés**, **intérêts** et **cotisations payées** ;
@@ -36,8 +36,9 @@ Pour chaque année `n` de la simulation :
    - `FIXE` : un taux constant (ex. 10 %) ;
    - `VARIABLE` : `tauxDepart + increment × (annéesSansSinistre − 1)`, limité par un `plafond`.
    - Une année avec sinistre ne donne jamais de bonus.
-3. `bonus = cotisation auto × taux auto + cotisation habitation × taux habitation`
-4. `capital = capital précédent × (1 + rendement) + bonus + versements libres de l'année`
+3. Les cotisations augmentent chaque année : `cotisation de l'année n = cotisation saisie × (1 + hausse)^(n-1)`.
+4. `bonus = cotisation auto de l'année × taux auto + cotisation habitation de l'année × taux habitation`
+5. `capital = capital précédent × (1 + rendement) + bonus + versements libres de l'année`
 
 **Exemple :** 1 000 € de cotisations par an, bonus fixe de 10 %, rendement de 2 %.
 L'année 1, le capital vaut 100 €. L'année 2, il vaut 100 × 1,02 + 100 = 202 €.
@@ -131,6 +132,7 @@ cd ASSUR_EPARGNE_BACK
   "cotisationAuto": 700,
   "cotisationHabitation": 300,
   "versementMensuel": 0,
+  "hausseAnnuelle": 0.04,
   "sinistresAuto": [3],
   "sinistresHabitation": [],
   "rendement": 0.02,
@@ -145,22 +147,26 @@ cd ASSUR_EPARGNE_BACK
 
 ```json
 {
-  "capitalFinal": 236.04,
-  "bonusTotal": 230.0,
+  "capitalFinal": 242.57,
+  "bonusTotal": 236.45,
   "versementsTotal": 0.0,
-  "interetsTotal": 6.04,
+  "interetsTotal": 6.12,
+  "cotisationsTotal": 3121.6,
   "detailParAnnee": [
     { "annee": 1, "capital": 100.0, "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0,
-      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 100.0, "versementsCumul": 0.0, "interets": 0.0 },
-    { "annee": 2, "capital": 202.0, "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0,
-      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 200.0, "versementsCumul": 0.0, "interets": 2.0 },
-    { "annee": 3, "capital": 236.04, "bonus": 30.0, "bonusAuto": 0.0, "bonusHabitation": 30.0,
-      "tauxAuto": 0.0, "tauxHabitation": 0.1, "bonusCumul": 230.0, "versementsCumul": 0.0, "interets": 6.04 }
+      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 100.0, "versementsCumul": 0.0, "interets": 0.0,
+      "cotisationAuto": 700.0, "cotisationHabitation": 300.0, "cotisationsCumul": 1000.0 },
+    { "annee": 2, "capital": 206.0, "bonus": 104.0, "bonusAuto": 72.8, "bonusHabitation": 31.2,
+      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 204.0, "versementsCumul": 0.0, "interets": 2.0,
+      "cotisationAuto": 728.0, "cotisationHabitation": 312.0, "cotisationsCumul": 2040.0 },
+    { "annee": 3, "capital": 242.57, "bonus": 32.45, "bonusAuto": 0.0, "bonusHabitation": 32.45,
+      "tauxAuto": 0.0, "tauxHabitation": 0.1, "bonusCumul": 236.45, "versementsCumul": 0.0, "interets": 6.12,
+      "cotisationAuto": 757.12, "cotisationHabitation": 324.48, "cotisationsCumul": 3121.6 }
   ]
 }
 ```
 
-À chaque année, `capital = bonusCumul + versementsCumul + interets`. L'année 3, le sinistre auto ramène `tauxAuto` à 0, sans toucher au contrat habitation.
+À chaque année, `capital = bonusCumul + versementsCumul + interets`. Avec une hausse de 4 %, la cotisation auto passe de 700 € à 728 € puis 757,12 €. L'année 3, le sinistre auto ramène `tauxAuto` à 0, sans toucher au contrat habitation.
 
 </details>
 

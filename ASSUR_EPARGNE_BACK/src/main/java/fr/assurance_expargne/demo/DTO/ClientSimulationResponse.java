@@ -7,5 +7,6 @@ public record ClientSimulationResponse(
         double bonusTotal,
         double versementsTotal,
         double interetsTotal,
+        double cotisationsTotal,
         List<YearResult> detailParAnnee
 ) {}

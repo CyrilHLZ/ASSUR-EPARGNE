@@ -45,7 +45,11 @@ public record ClientSimulationRequest(
     double increment,
 
     @DecimalMin(value = "0.0", message = "Le plafond ne peut pas être négatif")
-    double plafond
+    double plafond,
+
+    @DecimalMin(value = "0.0", message = "La hausse annuelle ne peut pas être négative")
+    @DecimalMax(value = "0.15", message = "La hausse annuelle ne peut pas dépasser 15 %")
+    double hausseAnnuelle
 
 ) {
 

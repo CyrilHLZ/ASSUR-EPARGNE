@@ -53,6 +53,9 @@ export default function ProfilForm() {
   const cotisation = cotisationAuto + cotisationHabitation;
   const pret = cotisation > 0;
 
+  const [hausseAnnuelle, setHausseAnnuelle] = useState(4);
+
+
   // On relance la simulation à chaque changement de réglage
   useEffect(() => {
     if (!pret) return;
@@ -65,6 +68,7 @@ export default function ProfilForm() {
           headers: { 'Content-Type': 'application/json' },
           signal: controleur.signal,
           body: JSON.stringify({
+            hausseAnnuelle: hausseAnnuelle / 100,
             cotisationAuto,
             cotisationHabitation,
             versementMensuel,
@@ -101,7 +105,7 @@ export default function ProfilForm() {
       controleur.abort();
     };
   }, [pret, cotisationAuto, cotisationHabitation, sinistresAuto, sinistresHabitation,
-      rendement, versementMensuel, duree, mode, tauxFixe, tauxDepart, increment, plafond]);
+      rendement, versementMensuel, hausseAnnuelle, duree, mode, tauxFixe, tauxDepart, increment, plafond]);
 
   function basculerSinistre(contrat, annee) {
     const [liste, setListe] = contrat === 'auto'
@@ -209,6 +213,13 @@ export default function ProfilForm() {
         )}
 
         <div>
+          <Curseur libelle="Hausse annuelle des cotisations" valeur={hausseAnnuelle}
+            affichage={`${pct(hausseAnnuelle)} / an`}
+            min={0} max={8} pas={0.5} onChange={setHausseAnnuelle} />
+          <p className="aide">Les primes auto et habitation augmentent de 4 à 7 % par an en ce moment ; le bonus suit.</p>
+        </div>
+
+        <div>
           <Curseur libelle="Rendement annuel" valeur={rendement} affichage={pct(rendement)}
             min={0} max={5} pas={0.1} onChange={setRendement} />
           <p className="aide">2 % environ garantis, 2,6 % = moyenne des fonds euros en 2025.</p>
@@ -228,7 +239,7 @@ export default function ProfilForm() {
           <>
             <Tuiles lignes={lignes} cotisation={cotisation} duree={duree} rendement={rendement}
               versementMensuel={versementMensuel} />
-            <Comparaison lignes={lignes} cotisation={cotisation} duree={duree} />
+            <Comparaison lignes={lignes} duree={duree} />
             <Graphique lignes={lignes} />
           </>
         ) : (
@@ -246,7 +257,7 @@ export default function ProfilForm() {
           onProfilMoyen={profilMoyen}
         />
 
-        {lignes.length > 0 && <TableauAnnees lignes={lignes} cotisation={cotisation} />}
+        {lignes.length > 0 && <TableauAnnees lignes={lignes} />}
       </main>
     </div>
   );

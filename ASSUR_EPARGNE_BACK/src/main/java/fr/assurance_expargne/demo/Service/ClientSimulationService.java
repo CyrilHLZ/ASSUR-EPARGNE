@@ -25,7 +25,7 @@ public class ClientSimulationService {
 
         // 2. Appeler le moteur
         List<YearResult> detail = engine.simuler(auto, habitation,
-                req.versementMensuel(), req.rendement(), req.duree(),
+                req.versementMensuel(), req.hausseAnnuelle(), req.rendement(), req.duree(),
                 req.mode(), req.tauxFixe(), req.tauxDepart(),
                 req.increment(), req.plafond());
 
@@ -38,6 +38,7 @@ public class ClientSimulationService {
                 derniere.bonusCumul(),
                 derniere.versementsCumul(),
                 derniere.interets(),
+                derniere.cotisationsCumul(),
                 detail);
     }
 }

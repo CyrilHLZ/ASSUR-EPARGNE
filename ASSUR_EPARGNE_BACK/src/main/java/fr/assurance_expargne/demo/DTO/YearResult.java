@@ -16,5 +16,9 @@ public record YearResult(
         // Cumuls depuis l'année 1 : capital = bonusCumul + versementsCumul + interets
         double bonusCumul,
         double versementsCumul,
-        double interets
+        double interets,
+
+        double cotisationAuto,
+        double cotisationHabitation,
+        double cotisationsCumul
 ) {}

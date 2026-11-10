@@ -31,8 +31,8 @@ export default function Tuiles({ lignes, cotisation, duree, rendement, versement
 
       <div className="tuile">
         <span className="k"><span className="pastille" style={{ background: 'var(--ligne)' }} />Cotisations payées</span>
-        <span className="v">{euros(cotisation * duree)}</span>
-        <span className="s">{euros(cotisation)} par an</span>
+        <span className="v">{euros(derniere.cotisationsCumul)}</span>
+        <span className="s">{euros(cotisation)} la 1ʳᵉ année</span>
       </div>
 
     </section>

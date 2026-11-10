@@ -1,7 +1,7 @@
 const euros = (v) => Math.round(v).toLocaleString('fr-FR') + ' €';
 const pct = (v) => (Math.round(v * 10000) / 100).toLocaleString('fr-FR') + ' %';
 
-export default function TableauAnnees({ lignes, cotisation }) {
+export default function TableauAnnees({ lignes }) {
   return (
     <section className="panneau">
       <h2>Détail année par année</h2>
@@ -31,7 +31,7 @@ export default function TableauAnnees({ lignes, cotisation }) {
                     ? <><span className="zero">0 %</span><span className="pilule">sinistre</span></>
                     : pct(ligne.tauxHabitation)}
                 </td>
-                <td>{euros(cotisation)}</td>
+                <td>{euros(ligne.cotisationAuto + ligne.cotisationHabitation)}</td>
                 <td>{euros(ligne.bonus)}</td>
                 <td>{euros(ligne.capital)}</td>
               </tr>
