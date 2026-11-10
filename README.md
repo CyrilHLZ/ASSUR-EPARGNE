@@ -17,6 +17,7 @@ Projet full-stack : une **API REST en Java / Spring Boot** et une **interface en
 
 - Saisie des cotisations annuelles **auto et habitation**.
 - Choix du **type de bonus** : progressif (taux de départ, hausse par année sans sinistre, plafond) ou fixe.
+- Choix du **support d'épargne** : assurance vie (disponible à tout moment) ou PER (bloqué jusqu'à la retraite), avec les prélèvements sociaux de chacun.
 - Réglage du **rendement**, des **versements libres**, de la **hausse annuelle des cotisations** et de la **durée** (5 à 30 ans) avec des curseurs, calcul en direct.
 - **Grille des sinistres** auto et habitation : un clic sur une année déclare un sinistre, un second clic le retire.
 - Résultats :
@@ -39,6 +40,7 @@ Pour chaque année `n` de la simulation :
 3. Les cotisations augmentent chaque année : `cotisation de l'année n = cotisation saisie × (1 + hausse)^(n-1)`.
 4. `bonus = cotisation auto de l'année × taux auto + cotisation habitation de l'année × taux habitation`
 5. `capital = capital précédent × (1 + rendement) + bonus + versements libres de l'année`
+6. À la sortie, les **prélèvements sociaux** ne portent que sur les intérêts : **17,2 %** en assurance vie, **18,6 %** en PER (taux 2026). L'API renvoie aussi le capital et les intérêts **nets**.
 
 **Exemple :** 1 000 € de cotisations par an, bonus fixe de 10 %, rendement de 2 %.
 L'année 1, le capital vaut 100 €. L'année 2, il vaut 100 × 1,02 + 100 = 202 €.
@@ -138,6 +140,7 @@ cd ASSUR_EPARGNE_BACK
   "rendement": 0.02,
   "duree": 3,
   "mode": "FIXE",
+  "support": "ASSURANCE_VIE",
   "tauxFixe": 0.10,
   "tauxDepart": 0,
   "increment": 0,
@@ -152,6 +155,11 @@ cd ASSUR_EPARGNE_BACK
   "versementsTotal": 0.0,
   "interetsTotal": 6.12,
   "cotisationsTotal": 3121.6,
+  "support": "ASSURANCE_VIE",
+  "tauxPrelevementsSociaux": 0.172,
+  "prelevementsSociaux": 1.05,
+  "interetsNets": 5.07,
+  "capitalNet": 241.52,
   "detailParAnnee": [
     { "annee": 1, "capital": 100.0, "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0,
       "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 100.0, "versementsCumul": 0.0, "interets": 0.0,

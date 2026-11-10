@@ -3,6 +3,7 @@ package fr.assurance_expargne.demo.DTO;
 import java.util.Set;
 
 import fr.assurance_expargne.demo.Model.BonusMode;
+import fr.assurance_expargne.demo.Model.Support;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -30,6 +31,9 @@ public record ClientSimulationRequest(
 
     @NotNull(message = "Le mode de bonus est obligatoire : AUCUN, FIXE ou VARIABLE")
     BonusMode mode,
+
+    @NotNull(message = "Le support d'épargne est obligatoire : ASSURANCE_VIE ou PER")
+    Support support,
 
     @DecimalMin(value = "0.0", message = "Le rendement ne peut pas être négatif")
     @DecimalMax(value = "0.2", message = "Le rendement ne peut pas dépasser 20 %")

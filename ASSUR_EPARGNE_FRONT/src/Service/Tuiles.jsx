@@ -1,6 +1,9 @@
 const euros = (v) => Math.round(v).toLocaleString('fr-FR') + ' €';
 
-export default function Tuiles({ lignes, cotisation, duree, rendement, versementMensuel }) {
+const pct = (v) => (Math.round(v * 1000) / 10).toLocaleString('fr-FR') + ' %';
+const NOMS_SUPPORT = { ASSURANCE_VIE: 'assurance vie', PER: 'PER' };
+
+export default function Tuiles({ lignes, cotisation, duree, rendement, versementMensuel, totaux }) {
   const derniere = lignes[lignes.length - 1];
 
   return (
@@ -8,7 +11,7 @@ export default function Tuiles({ lignes, cotisation, duree, rendement, versement
       <div className="tuile principale">
         <span className="k">Capital au terme</span>
         <span className="v">{euros(derniere.capital)}</span>
-        <span className="s">après {duree} ans</span>
+        <span className="s">{euros(totaux.capitalNet)} net · {duree} ans en {NOMS_SUPPORT[totaux.support]}</span>
       </div>
 
       <div className="tuile">
@@ -26,7 +29,10 @@ export default function Tuiles({ lignes, cotisation, duree, rendement, versement
       <div className="tuile">
         <span className="k"><span className="pastille" style={{ background: 'var(--troisieme)' }} />Intérêts</span>
         <span className="v">{euros(derniere.interets)}</span>
-        <span className="s">avec un rendement de {rendement.toLocaleString('fr-FR')} %</span>
+        <span className="s">
+          bruts à {rendement.toLocaleString('fr-FR')} % · {euros(totaux.interetsNets)} nets
+          après prélèvements ({pct(totaux.tauxPrelevementsSociaux)})
+        </span>
       </div>
 
       <div className="tuile">

@@ -29,7 +29,7 @@ class SimulationControllerTest {
               "sinistresAuto": [], "sinistresHabitation": [],
               "rendement": 0.02, "duree": 20,
               "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
-              "mode": "FIXE"
+              "mode": "FIXE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -50,7 +50,7 @@ class SimulationControllerTest {
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 0,
             "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
-            "mode": "FIXE"
+            "mode": "FIXE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -92,7 +92,7 @@ class SimulationControllerTest {
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0, "tauxDepart": 0.05, "increment": 0.005, "plafond": 0.03,
-            "mode": "VARIABLE"
+            "mode": "VARIABLE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -112,7 +112,7 @@ class SimulationControllerTest {
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0, "tauxDepart": 0.05, "increment": -0.005, "plafond": 0.10,
-            "mode": "VARIABLE"
+            "mode": "VARIABLE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -132,7 +132,7 @@ class SimulationControllerTest {
             "sinistresAuto": [], "sinistresHabitation": [],
             "rendement": 0.02, "duree": 2,
             "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
-            "mode": "FIXE"
+            "mode": "FIXE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -156,7 +156,7 @@ class SimulationControllerTest {
             "rendement": 0.02, "duree": 20,
             "tauxFixe": 0, "tauxDepart": 0.05, "increment": 0.005, "plafond": 0.10,
             "hausseAnnuelle": 0.20,
-            "mode": "VARIABLE"
+            "mode": "VARIABLE", "support": "ASSURANCE_VIE"
             }
             """;
 
@@ -186,5 +186,57 @@ class SimulationControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.requete").exists());
+    }
+
+    @Test
+    void prelevementsSociauxSelonLeSupport() throws Exception {
+        // Même scénario que reponseContientLesTotaux : 26 € d'intérêts
+        String base = """
+            {
+            "cotisationHabitation": 0, "cotisationAuto": 1000,
+            "versementMensuel": 100, "hausseAnnuelle": 0,
+            "sinistresAuto": [], "sinistresHabitation": [],
+            "rendement": 0.02, "duree": 2,
+            "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
+            "mode": "FIXE", "support": "%s"
+            }
+            """;
+
+        // Assurance vie : 17,2 % de 26 € = 4,47 €
+        mockMvc.perform(post("/api/simulations/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(base.formatted("ASSURANCE_VIE")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.prelevementsSociaux").value(closeTo(4.472, 0.01)))
+                .andExpect(jsonPath("$.interetsNets").value(closeTo(21.528, 0.01)))
+                .andExpect(jsonPath("$.capitalNet").value(closeTo(2621.528, 0.01)));
+
+        // PER : 18,6 % de 26 € = 4,84 €
+        mockMvc.perform(post("/api/simulations/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(base.formatted("PER")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.prelevementsSociaux").value(closeTo(4.836, 0.01)))
+                .andExpect(jsonPath("$.capitalNet").value(closeTo(2621.164, 0.01)));
+    }
+
+    @Test
+    void sansSupportRenvoie400() throws Exception {
+        String json = """
+            {
+            "cotisationHabitation": 400, "cotisationAuto": 661,
+            "versementMensuel": 0, "hausseAnnuelle": 0,
+            "sinistresAuto": [], "sinistresHabitation": [],
+            "rendement": 0.02, "duree": 20,
+            "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
+            "mode": "FIXE"
+            }
+            """;
+
+        mockMvc.perform(post("/api/simulations/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.support").exists());
     }
 }

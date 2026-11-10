@@ -33,6 +33,9 @@ export default function ProfilForm() {
 
   // Type de bonus : VARIABLE (progressif) ou FIXE
   const [mode, setMode] = useState('VARIABLE');
+
+  // Support d'épargne : ASSURANCE_VIE ou PER
+  const [support, setSupport] = useState('ASSURANCE_VIE');
   const [tauxDepart, setTauxDepart] = useState(3);
   const [increment, setIncrement] = useState(0.5);
   const [plafond, setPlafond] = useState(8);
@@ -77,6 +80,7 @@ export default function ProfilForm() {
             rendement: rendement / 100,
             duree,
             mode,
+            support,
             tauxFixe: tauxFixe / 100,
             tauxDepart: tauxDepart / 100,
             increment: increment / 100,
@@ -105,7 +109,7 @@ export default function ProfilForm() {
       controleur.abort();
     };
   }, [pret, cotisationAuto, cotisationHabitation, sinistresAuto, sinistresHabitation,
-      rendement, versementMensuel, hausseAnnuelle, duree, mode, tauxFixe, tauxDepart, increment, plafond]);
+      rendement, versementMensuel, hausseAnnuelle, duree, mode, support, tauxFixe, tauxDepart, increment, plafond]);
 
   function basculerSinistre(contrat, annee) {
     const [liste, setListe] = contrat === 'auto'
@@ -219,6 +223,23 @@ export default function ProfilForm() {
           <p className="aide">Les primes auto et habitation augmentent de 4 à 7 % par an en ce moment ; le bonus suit.</p>
         </div>
 
+        <div className="champ">
+          <span className="titre-champ">Support d'épargne</span>
+          <div className="segment" role="group" aria-label="Support d'épargne">
+            <button type="button" aria-pressed={support === 'ASSURANCE_VIE'} onClick={() => setSupport('ASSURANCE_VIE')}>
+              Assurance vie
+            </button>
+            <button type="button" aria-pressed={support === 'PER'} onClick={() => setSupport('PER')}>
+              PER
+            </button>
+          </div>
+          <p className="aide">
+            {support === 'ASSURANCE_VIE'
+              ? "Argent disponible à tout moment. Prélèvements sociaux de 17,2 % sur les intérêts."
+              : "Bloqué jusqu'à la retraite, sauf cas prévus par la loi (achat de la résidence principale…). Les versements libres peuvent réduire l'impôt sur le revenu. Prélèvements sociaux de 18,6 % sur les intérêts."}
+          </p>
+        </div>
+
         <div>
           <Curseur libelle="Rendement annuel" valeur={rendement} affichage={pct(rendement)}
             min={0} max={5} pas={0.1} onChange={setRendement} />
@@ -238,7 +259,7 @@ export default function ProfilForm() {
         {lignes.length > 0 ? (
           <>
             <Tuiles lignes={lignes} cotisation={cotisation} duree={duree} rendement={rendement}
-              versementMensuel={versementMensuel} />
+              versementMensuel={versementMensuel} totaux={resultat} />
             <Comparaison lignes={lignes} duree={duree} />
             <Graphique lignes={lignes} />
           </>
