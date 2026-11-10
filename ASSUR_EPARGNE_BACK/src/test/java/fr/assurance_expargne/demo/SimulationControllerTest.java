@@ -166,4 +166,25 @@ class SimulationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.hausseAnnuelle").exists());
     }
+
+    @Test
+    void champManquantRenvoie400Lisible() throws Exception {
+        // Ancienne version du front : pas de "hausseAnnuelle"
+        String json = """
+            {
+            "cotisationHabitation": 400, "cotisationAuto": 661,
+            "versementMensuel": 0,
+            "sinistresAuto": [], "sinistresHabitation": [],
+            "rendement": 0.02, "duree": 20,
+            "tauxFixe": 0.10, "tauxDepart": 0, "increment": 0, "plafond": 0,
+            "mode": "FIXE"
+            }
+            """;
+
+        mockMvc.perform(post("/api/simulations/client")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.requete").exists());
+    }
 }
