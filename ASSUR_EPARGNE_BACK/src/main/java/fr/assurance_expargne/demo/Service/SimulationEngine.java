@@ -15,31 +15,44 @@ public class SimulationEngine {
 
     private final BonusCalculator calculator = new BonusCalculator();
 
-    public List<YearResult> simuler(double cotisation, double versementMensuel, double rendement, int duree,
-                                    BonusMode mode, double tauxFixe, double tauxDepart,
-                                    double increment, double plafond,
-                                    Set<Integer> sinistres) {
-        List<YearResult> resultats = new ArrayList<>();
-        double capital = 0;
-        int anneesSansSinistre = 0;
-        double versementAnnuel = versementMensuel * 12;
+    public List<YearResult> simuler(Contrat auto, Contrat habitation,
+                                double versementMensuel, double rendement, int duree,
+                                BonusMode mode, double tauxFixe, double tauxDepart,
+                                double increment, double plafond) {
+    List<YearResult> resultats = new ArrayList<>();
+    double capital = 0;
+    int sansSinistreAuto = 0;
+    int sansSinistreHabitation = 0;
+    double versementAnnuel = versementMensuel * 12;
 
-        for (int annee = 1; annee <= duree; annee++) {
+    for (int annee = 1; annee <= duree; annee++) {
 
-            // Sinistre → compteur remis à zéro, sinon +1
-            if (sinistres.contains(annee)) {
-                anneesSansSinistre = 0;
-            } else {
-                anneesSansSinistre++;
-            }
-
-            double taux = calculator.taux(mode, tauxFixe, tauxDepart,
-                                          increment, plafond, anneesSansSinistre);
-            double bonus = cotisation * taux;
-            capital = capital * (1 + rendement) + bonus + versementAnnuel;
-            resultats.add(new YearResult(annee, capital, bonus));
+        // Un compteur par contrat : sinistre → 0, sinon +1
+        if (auto.sinistres().contains(annee)) {
+            sansSinistreAuto = 0;
+        } else {
+            sansSinistreAuto++;
         }
-        return resultats;
+        if (habitation.sinistres().contains(annee)) {
+            sansSinistreHabitation = 0;
+        } else {
+            sansSinistreHabitation++;
+        }
+
+        double tauxAuto = calculator.taux(mode, tauxFixe, tauxDepart,
+                                          increment, plafond, sansSinistreAuto);
+        double tauxHabitation = calculator.taux(mode, tauxFixe, tauxDepart,
+                                                increment, plafond, sansSinistreHabitation);
+
+        double bonusAuto = auto.cotisation() * tauxAuto;
+        double bonusHabitation = habitation.cotisation() * tauxHabitation;
+        double bonus = bonusAuto + bonusHabitation;
+
+        capital = capital * (1 + rendement) + bonus + versementAnnuel;
+        resultats.add(new YearResult(annee, capital, bonus, bonusAuto, bonusHabitation));
     }
+    return resultats;
+}
+
 }
 
