@@ -25,20 +25,19 @@ public class ClientSimulationService {
 
         // 2. Appeler le moteur
         List<YearResult> detail = engine.simuler(auto, habitation,
-        req.versementMensuel(), req.rendement(), req.duree(),
-        req.mode(), req.tauxFixe(), req.tauxDepart(),
-        req.increment(), req.plafond());
+                req.versementMensuel(), req.rendement(), req.duree(),
+                req.mode(), req.tauxFixe(), req.tauxDepart(),
+                req.increment(), req.plafond());
 
 
-        // 4. Capital final = celui de la dernière année
-        double capitalFinal = detail.get(detail.size() - 1).capital();
+        // 3. Les totaux = les cumuls de la dernière année, déjà calculés par le moteur
+        YearResult derniere = detail.get(detail.size() - 1);
 
-        // 5. Total des bonus = somme des bonus de chaque année
-        double bonusTotal = 0;
-        for (YearResult an : detail) {
-            bonusTotal += an.bonus();
-        }
-
-        return new ClientSimulationResponse(capitalFinal, bonusTotal, detail);
+        return new ClientSimulationResponse(
+                derniere.capital(),
+                derniere.bonusCumul(),
+                derniere.versementsCumul(),
+                derniere.interets(),
+                detail);
     }
 }

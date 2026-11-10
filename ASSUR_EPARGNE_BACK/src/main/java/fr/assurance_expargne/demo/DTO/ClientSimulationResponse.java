@@ -4,8 +4,8 @@ import java.util.List;
 
 public record ClientSimulationResponse(
         double capitalFinal,
-        double bonusTotal,            
-        List<YearResult> detailParAnnee   
+        double bonusTotal,
+        double versementsTotal,
+        double interetsTotal,
+        List<YearResult> detailParAnnee
 ) {}
-
-

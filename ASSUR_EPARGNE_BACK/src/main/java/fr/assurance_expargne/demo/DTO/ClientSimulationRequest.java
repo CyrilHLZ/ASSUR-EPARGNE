@@ -41,6 +41,7 @@ public record ClientSimulationRequest(
 
     double tauxFixe,
     double tauxDepart,
+    @DecimalMin(value = "0.0", message = "La hausse par année sans sinistre ne peut pas être négative")
     double increment,
 
     @DecimalMin(value = "0.0", message = "Le plafond ne peut pas être négatif")
