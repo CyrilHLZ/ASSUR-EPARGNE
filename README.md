@@ -147,13 +147,20 @@ cd ASSUR_EPARGNE_BACK
 {
   "capitalFinal": 236.04,
   "bonusTotal": 230.0,
+  "versementsTotal": 0.0,
+  "interetsTotal": 6.04,
   "detailParAnnee": [
-    { "annee": 1, "capital": 100.0,  "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0 },
-    { "annee": 2, "capital": 202.0,  "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0 },
-    { "annee": 3, "capital": 236.04, "bonus": 30.0,  "bonusAuto": 0.0,  "bonusHabitation": 30.0 }
+    { "annee": 1, "capital": 100.0, "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0,
+      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 100.0, "versementsCumul": 0.0, "interets": 0.0 },
+    { "annee": 2, "capital": 202.0, "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0,
+      "tauxAuto": 0.1, "tauxHabitation": 0.1, "bonusCumul": 200.0, "versementsCumul": 0.0, "interets": 2.0 },
+    { "annee": 3, "capital": 236.04, "bonus": 30.0, "bonusAuto": 0.0, "bonusHabitation": 30.0,
+      "tauxAuto": 0.0, "tauxHabitation": 0.1, "bonusCumul": 230.0, "versementsCumul": 0.0, "interets": 6.04 }
   ]
 }
 ```
+
+À chaque année, `capital = bonusCumul + versementsCumul + interets`. L'année 3, le sinistre auto ramène `tauxAuto` à 0, sans toucher au contrat habitation.
 
 </details>
 
@@ -166,7 +173,6 @@ Si une cotisation est négative, l'API répond `400 Bad Request` :
 ## Pistes d'amélioration
 
 - Utiliser `BigDecimal` pour les montants, au lieu de `double`.
-- Faire calculer par l'API les intérêts et les versements cumulés (aujourd'hui calculés dans le front).
 - Vue « Côté assureur » : coût du bonus sur un portefeuille de clients.
 
 ## Auteur

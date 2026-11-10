@@ -4,7 +4,7 @@ const euros = (v) => Math.round(v).toLocaleString('fr-FR') + ' €';
 
 export default function Graphique({ lignes }) {
   // Point de départ à 0 pour que la courbe parte de l'origine
-  const donnees = [{ annee: 0, bonusCumul: 0, interets: 0 }, ...lignes];
+  const donnees = [{ annee: 0, bonusCumul: 0, versementsCumul: 0, interets: 0 }, ...lignes];
   const anneesSinistre = lignes.filter((l) => l.sinistreAuto || l.sinistreHabitation).map((l) => l.annee);
 
   const titre = anneesSinistre.length
@@ -29,14 +29,18 @@ export default function Graphique({ lignes }) {
           {anneesSinistre.map((a) => (
             <ReferenceLine key={a} x={a} stroke="var(--danger)" strokeDasharray="3 3" />
           ))}
+          {/* Ordre d'empilement, de bas en haut : bonus, versements, intérêts */}
           <Area type="monotone" dataKey="bonusCumul" name="Bonus prudence" stackId="1"
             stroke="var(--accent)" fill="var(--accent)" fillOpacity={0.85} />
+          <Area type="monotone" dataKey="versementsCumul" name="Versements libres" stackId="1"
+            stroke="var(--second)" fill="var(--second)" fillOpacity={0.7} />
           <Area type="monotone" dataKey="interets" name="Intérêts" stackId="1"
             stroke="var(--troisieme)" fill="var(--troisieme)" fillOpacity={0.85} />
         </AreaChart>
       </ResponsiveContainer>
       <div className="legende">
         <span><span className="pastille" style={{ background: 'var(--accent)' }} />Bonus prudence</span>
+        <span><span className="pastille" style={{ background: 'var(--second)' }} />Versements libres</span>
         <span><span className="pastille" style={{ background: 'var(--troisieme)' }} />Intérêts</span>
         <span><span className="pastille" style={{ background: 'var(--danger)' }} />Année avec sinistre</span>
       </div>

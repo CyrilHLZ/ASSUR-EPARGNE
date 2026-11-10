@@ -127,24 +127,14 @@ export default function ProfilForm() {
     setSinistresHabitation(tousLes(11));
   }
 
-  // On enrichit le détail renvoyé par l'API pour l'affichage
+  // L'API calcule tout ; on ajoute seulement les sinistres saisis, pour l'affichage
   let lignes = [];
   if (pret && resultat) {
-    let bonusCumul = 0;
-    lignes = resultat.detailParAnnee.map((an) => {
-      bonusCumul += an.bonus;
-      const versementsCumul = versementMensuel * 12 * an.annee;
-      return {
-        ...an,
-        bonusCumul,
-        versementsCumul,
-        interets: an.capital - bonusCumul - versementsCumul,
-        tauxAuto: cotisationAuto > 0 ? an.bonusAuto / cotisationAuto : 0,
-        tauxHabitation: cotisationHabitation > 0 ? an.bonusHabitation / cotisationHabitation : 0,
-        sinistreAuto: sinistresAuto.includes(an.annee),
-        sinistreHabitation: sinistresHabitation.includes(an.annee),
-      };
-    });
+    lignes = resultat.detailParAnnee.map((an) => ({
+      ...an,
+      sinistreAuto: sinistresAuto.includes(an.annee),
+      sinistreHabitation: sinistresHabitation.includes(an.annee),
+    }));
   }
 
   return (

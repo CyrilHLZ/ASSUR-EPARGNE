@@ -25,8 +25,10 @@ export default function Comparaison({ lignes, cotisation, duree }) {
         </div>
         <p className="cmp-note">
           Pour le même prix, vous récupérez <strong>{euros(recupere)}</strong> en épargne, soit{' '}
-          {part.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} % de vos cotisations, qui deviennent{' '}
-          <strong>{euros(derniere.capital)}</strong> avec les intérêts.
+          {part.toLocaleString('fr-FR', { maximumFractionDigits: 1 })} % de vos cotisations.
+          {derniere.versementsCumul > 0
+            ? <> Avec vos versements et les intérêts, votre épargne atteint <strong>{euros(derniere.capital)}</strong>.</>
+            : <> Avec les intérêts, ils deviennent <strong>{euros(derniere.capital)}</strong>.</>}
         </p>
       </div>
     </section>
