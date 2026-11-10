@@ -139,7 +139,8 @@ export default function ProfilForm() {
         bonusCumul,
         versementsCumul,
         interets: an.capital - bonusCumul - versementsCumul,
-        taux: an.bonus / cotisation,
+        tauxAuto: cotisationAuto > 0 ? an.bonusAuto / cotisationAuto : 0,
+        tauxHabitation: cotisationHabitation > 0 ? an.bonusHabitation / cotisationHabitation : 0,
         sinistreAuto: sinistresAuto.includes(an.annee),
         sinistreHabitation: sinistresHabitation.includes(an.annee),
       };

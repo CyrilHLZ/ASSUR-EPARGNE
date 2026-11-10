@@ -2,12 +2,12 @@ package fr.assurance_expargne.demo.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import fr.assurance_expargne.demo.DTO.YearResult;
 import fr.assurance_expargne.demo.Model.BonusMode;
+import fr.assurance_expargne.demo.Model.Contrat;
 
 @Service 
 public class SimulationEngine {

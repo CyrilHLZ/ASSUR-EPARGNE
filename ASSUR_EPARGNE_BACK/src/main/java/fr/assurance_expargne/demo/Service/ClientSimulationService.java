@@ -1,14 +1,13 @@
 package fr.assurance_expargne.demo.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import fr.assurance_expargne.demo.DTO.ClientSimulationRequest;
 import fr.assurance_expargne.demo.DTO.ClientSimulationResponse;
 import fr.assurance_expargne.demo.DTO.YearResult;
+import fr.assurance_expargne.demo.Model.Contrat;
 
 @Service
 public class ClientSimulationService {

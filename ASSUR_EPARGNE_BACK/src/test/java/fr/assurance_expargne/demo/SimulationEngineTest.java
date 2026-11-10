@@ -9,16 +9,18 @@ import org.junit.jupiter.api.Test;
 
 import fr.assurance_expargne.demo.DTO.YearResult;
 import fr.assurance_expargne.demo.Model.BonusMode;
+import fr.assurance_expargne.demo.Model.Contrat;
 import fr.assurance_expargne.demo.Service.SimulationEngine;
 
 public class SimulationEngineTest {
 
     private final SimulationEngine simulationEngine = new SimulationEngine();
-    
+
     @Test
     void dossierFixe20Ans() {
-        List<YearResult> resultats = simulationEngine.simuler(1061, 0, 0.02, 20,
-                BonusMode.FIXE, 0.10, 0, 0, 0, Set.of());
+        // Toute la cotisation sur un seul contrat, l'autre à 0
+        List<YearResult> resultats = simulationEngine.simuler(new Contrat(1061, Set.of()), new Contrat(0, Set.of()),
+                0, 0.02, 20, BonusMode.FIXE, 0.10, 0, 0, 0);
 
         assertEquals(20, resultats.size());
 
@@ -29,8 +31,8 @@ public class SimulationEngineTest {
     @Test
     void versementsLibresSansBonus() {
         // 100 €/mois, aucun bonus (mode AUCUN), rendement de 2 %, 2 ans
-        List<YearResult> resultats = simulationEngine.simuler(0, 100, 0.02, 2,
-                BonusMode.AUCUN, 0, 0, 0, 0, Set.of());
+        List<YearResult> resultats = simulationEngine.simuler(new Contrat(0, Set.of()), new Contrat(0, Set.of()),
+                100, 0.02, 2, BonusMode.AUCUN, 0, 0, 0, 0);
 
         // Année 1 : 0 × 1,02 + 1 200 = 1 200
         assertEquals(1200, resultats.get(0).capital(), 0.01);
@@ -49,17 +51,7 @@ public class SimulationEngineTest {
 
         YearResult annee1 = resultats.get(0);
         assertEquals(100, annee1.bonusAuto(), 0.01);        // l'auto garde son bonus
-        assertEquals(100 , annee1.bonusHabitation(), 0.01);  // l'habitation le perd
-        assertEquals(300, resultats.get(1).bonus(), 0.01);    // 100 + (100 + 100)
-
-        // dossierFixe20Ans : toute la cotisation sur un seul contrat, l'autre à 0
-        simulationEngine.simuler(new Contrat(1061, Set.of()), new Contrat(0, Set.of()), 0, 0.02, 20,
-                BonusMode.FIXE, 0.10, 0, 0, 0);
-
-        // versementsLibresSansBonus
-        simulationEngine.simuler(new Contrat(0, Set.of()), new Contrat(0, Set.of()), 100, 0.02, 2,
-        BonusMode.AUCUN, 0, 0, 0, 0);
+        assertEquals(0, annee1.bonusHabitation(), 0.01);    // l'habitation le perd
+        assertEquals(300, resultats.get(1).capital(), 0.01); // 100 + (100 + 100)
     }
-
 }
-

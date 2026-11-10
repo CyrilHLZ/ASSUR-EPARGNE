@@ -26,14 +26,14 @@ Projet full-stack : une **API REST en Java / Spring Boot** et une **interface en
 
 Pour chaque année `n` de la simulation :
 
-1. Si l'année contient un sinistre, le compteur d'années sans sinistre repart à 0. Sinon, il augmente de 1.
+1. **Chaque contrat (auto, habitation) a son propre compteur** d'années sans sinistre. Un sinistre sur un contrat remet son compteur à 0, sans toucher à l'autre.
 2. Le taux de bonus dépend du mode choisi :
    - `AUCUN` : pas de bonus ;
    - `FIXE` : un taux constant (ex. 10 %) ;
    - `VARIABLE` : `tauxDepart + increment × (annéesSansSinistre − 1)`, limité par un `plafond`.
    - Une année avec sinistre ne donne jamais de bonus.
-3. `bonus = cotisations totales × taux`
-4. `capital = capital précédent × (1 + rendement) + bonus`
+3. `bonus = cotisation auto × taux auto + cotisation habitation × taux habitation`
+4. `capital = capital précédent × (1 + rendement) + bonus + versements libres de l'année`
 
 **Exemple :** 1 000 € de cotisations par an, bonus fixe de 10 %, rendement de 2 %.
 L'année 1, le capital vaut 100 €. L'année 2, il vaut 100 × 1,02 + 100 = 202 €.
@@ -53,11 +53,11 @@ ASSUR-EPARGNE/
 ├── ASSUR_EPARGNE_BACK/              API Spring Boot (port 8090)
 │   └── src/main/java/fr/assurance_expargne/demo/
 │       ├── Controller/   SimulationController    → POST /api/simulations/client
-│       ├── Service/      ClientSimulationService → additionne les cotisations, regroupe les sinistres
+│       ├── Service/      ClientSimulationService → crée un Contrat par assurance, appelle le moteur
 │       │                 SimulationEngine        → boucle année par année
 │       │                 BonusCalculator         → taux de bonus selon le mode
 │       ├── DTO/          objets de requête et de réponse (records Java)
-│       ├── Model/        BonusMode (AUCUN, FIXE, VARIABLE)
+│       ├── Model/        BonusMode (AUCUN, FIXE, VARIABLE), Contrat (cotisation + sinistres)
 │       └── Exception/    GlobalExceptionHandler  → erreurs 400 lisibles
 │
 └── ASSUR_EPARGNE_FRONT/             Interface React (port 5173)
@@ -127,12 +127,12 @@ cd ASSUR_EPARGNE_BACK
 
 ```json
 {
-  "capitalFinal": 206.04,
-  "bonusTotal": 200.0,
+  "capitalFinal": 236.04,
+  "bonusTotal": 230.0,
   "detailParAnnee": [
-    { "annee": 1, "capital": 100.0,  "bonus": 100.0 },
-    { "annee": 2, "capital": 202.0,  "bonus": 100.0 },
-    { "annee": 3, "capital": 206.04, "bonus": 0.0 }
+    { "annee": 1, "capital": 100.0,  "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0 },
+    { "annee": 2, "capital": 202.0,  "bonus": 100.0, "bonusAuto": 70.0, "bonusHabitation": 30.0 },
+    { "annee": 3, "capital": 236.04, "bonus": 30.0,  "bonusAuto": 0.0,  "bonusHabitation": 30.0 }
   ]
 }
 ```
@@ -147,8 +147,7 @@ Si une cotisation est négative, l'API répond `400 Bad Request` :
 
 ## Pistes d'amélioration
 
-- Choisir le mode de bonus, le rendement et les taux depuis l'interface.
-- Un compteur de sinistres par contrat (aujourd'hui, un sinistre habitation supprime aussi le bonus auto).
+- Utiliser `BigDecimal` pour les montants, au lieu de `double`.
 - Mise en ligne (back et front déployés).
 
 ## Auteur

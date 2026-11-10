@@ -10,34 +10,32 @@ export default function TableauAnnees({ lignes, cotisation }) {
           <thead>
             <tr>
               <th>Année</th>
-              <th>Taux du bonus</th>
+              <th>Taux auto</th>
+              <th>Taux habitation</th>
               <th>Cotisations</th>
               <th>Bonus de l'année</th>
               <th>Capital</th>
             </tr>
           </thead>
           <tbody>
-            {lignes.map((ligne) => {
-              const contrats = [ligne.sinistreAuto && 'auto', ligne.sinistreHabitation && 'habitation'].filter(Boolean);
-              return (
-                <tr key={ligne.annee}>
-                  <td>{ligne.annee}</td>
-                  <td>
-                    {contrats.length > 0 ? (
-                      <>
-                        <span className="zero">0 %</span>
-                        <span className="pilule">sinistre {contrats.join(' et ')}</span>
-                      </>
-                    ) : (
-                      pct(ligne.taux)
-                    )}
-                  </td>
-                  <td>{euros(cotisation)}</td>
-                  <td>{euros(ligne.bonus)}</td>
-                  <td>{euros(ligne.capital)}</td>
-                </tr>
-              );
-            })}
+            {lignes.map((ligne) => (
+              <tr key={ligne.annee}>
+                <td>{ligne.annee}</td>
+                <td>
+                  {ligne.sinistreAuto
+                    ? <><span className="zero">0 %</span><span className="pilule">sinistre</span></>
+                    : pct(ligne.tauxAuto)}
+                </td>
+                <td>
+                  {ligne.sinistreHabitation
+                    ? <><span className="zero">0 %</span><span className="pilule">sinistre</span></>
+                    : pct(ligne.tauxHabitation)}
+                </td>
+                <td>{euros(cotisation)}</td>
+                <td>{euros(ligne.bonus)}</td>
+                <td>{euros(ligne.capital)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
