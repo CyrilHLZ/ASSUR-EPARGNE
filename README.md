@@ -5,7 +5,11 @@ Chaque année sans sinistre, l'assureur reverse un bonus (un pourcentage des cot
 
 Projet full-stack : une **API REST en Java / Spring Boot** et une **interface en React**.
 
-<!-- Ajoute une capture d'écran ici : ![Aperçu](docs/apercu.png) -->
+### 👉 [Voir la démo en ligne](https://assur-epargne.onrender.com/)
+
+> Hébergée sur l'offre gratuite de Render : après 15 minutes sans visite, le serveur s'endort et le premier chargement peut prendre une minute.
+
+![Aperçu du simulateur](docs/apercu.png)
 
 ---
 
@@ -45,6 +49,7 @@ L'année 1, le capital vaut 100 €. L'année 2, il vaut 100 × 1,02 + 100 = 202
 | Back | Java 21, Spring Boot 4, Spring Web MVC, Bean Validation, Maven |
 | Tests | JUnit 5, MockMvc |
 | Front | React 19, Vite, Recharts |
+| Déploiement | Docker (build multi-étapes), Render |
 
 ## Architecture
 
@@ -72,6 +77,19 @@ ASSUR-EPARGNE/
 En développement, le **proxy Vite** redirige les appels `/api` du front vers `http://localhost:8090`. Le navigateur ne voit donc qu'une seule origine.
 
 ## Lancer le projet
+
+### Avec Docker (le plus simple)
+
+Depuis la racine du dépôt :
+
+```bash
+docker build -t assur-epargne .
+docker run --rm -p 9090:8090 assur-epargne
+```
+
+Ouvre ensuite `http://localhost:9090`. Le [Dockerfile](Dockerfile) construit le front, le place dans `src/main/resources/static` du back, puis lance un seul `.jar` qui sert l'interface et l'API. C'est la même image qui tourne en ligne.
+
+### Sans Docker, en développement
 
 **Prérequis :** Java 21 et Node.js 20 ou plus récent.
 
@@ -148,7 +166,8 @@ Si une cotisation est négative, l'API répond `400 Bad Request` :
 ## Pistes d'amélioration
 
 - Utiliser `BigDecimal` pour les montants, au lieu de `double`.
-- Mise en ligne (back et front déployés).
+- Faire calculer par l'API les intérêts et les versements cumulés (aujourd'hui calculés dans le front).
+- Vue « Côté assureur » : coût du bonus sur un portefeuille de clients.
 
 ## Auteur
 
